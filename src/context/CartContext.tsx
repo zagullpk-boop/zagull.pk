@@ -3,6 +3,8 @@
 import * as React from "react";
 import { supabase } from "@/lib/supabase";
 
+const isUUID = (id: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
 export interface CartItem {
   id: string; // This is the product_id
   name: string;
@@ -68,7 +70,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const savedCart = localStorage.getItem("zagull-cart");
         if (savedCart) {
           try {
-            setCart(JSON.parse(savedCart));
+            const parsed = JSON.parse(savedCart);
+            // Sanitize: only keep items with valid UUIDs (Supabase compliant)
+            const sanitized = Array.isArray(parsed) ? parsed.filter(item => isUUID(item.id)) : [];
+            setCart(sanitized);
           } catch (e) {
             console.error("Failed to parse cart", e);
           }
@@ -86,6 +91,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cart, userId]);
 
   const addToCart = async (product: any, quantity: number, variants: any = {}) => {
+    if (!isUUID(product.id)) {
+      console.error("Attempted to add item with invalid UUID to cart:", product.id);
+      return;
+    }
+
     if (userId) {
       // Upsert into Supabase
       const { error } = await supabase

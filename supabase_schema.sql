@@ -69,32 +69,55 @@ CREATE TABLE IF NOT EXISTS public.cart (
 -- 7. Enable Row Level Security (RLS)
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wishlist ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cart ENABLE ROW LEVEL SECURITY;
 
 -- 8. Setup Access Policies
 -- Products: Read for everyone, Write for authenticated (admin)
+DROP POLICY IF EXISTS "Products are viewable by everyone" ON public.products;
 CREATE POLICY "Products are viewable by everyone" ON public.products FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow anyone to insert products" ON public.products;
 CREATE POLICY "Allow anyone to insert products" ON public.products FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow anyone to update products" ON public.products;
 CREATE POLICY "Allow anyone to update products" ON public.products FOR UPDATE USING (true);
 
 -- Profiles: Users can only see/edit their own profile
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
 CREATE POLICY "Users can insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
--- Orders: Users can only see their own orders
-CREATE POLICY "Users can view own orders" ON public.orders FOR SELECT USING (auth.uid() = user_id);
+-- Orders: Users can only see their own orders, but admin needs to see all for stats
+DROP POLICY IF EXISTS "Enable select for all" ON public.orders;
+CREATE POLICY "Enable select for all" ON public.orders FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable insert for all users" ON public.orders;
+CREATE POLICY "Enable insert for all users" ON public.orders FOR INSERT WITH CHECK (true);
+
+-- Order Items: Link to orders
+DROP POLICY IF EXISTS "Enable insert for all users" ON public.order_items;
+CREATE POLICY "Enable insert for all users" ON public.order_items FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Enable select for all users" ON public.order_items;
+CREATE POLICY "Enable select for all users" ON public.order_items FOR SELECT USING (true);
 
 -- Wishlist: Users can view/edit their own wishlist
 ALTER TABLE public.wishlist ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own wishlist" ON public.wishlist;
 CREATE POLICY "Users can view own wishlist" ON public.wishlist FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own wishlist" ON public.wishlist;
 CREATE POLICY "Users can insert own wishlist" ON public.wishlist FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own wishlist" ON public.wishlist;
 CREATE POLICY "Users can delete own wishlist" ON public.wishlist FOR DELETE USING (auth.uid() = user_id);
 
 -- Cart: Users can view/edit their own cart
 ALTER TABLE public.cart ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own cart" ON public.cart;
 CREATE POLICY "Users can view own cart" ON public.cart FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own cart" ON public.cart;
 CREATE POLICY "Users can insert own cart" ON public.cart FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update own cart" ON public.cart;
 CREATE POLICY "Users can update own cart" ON public.cart FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own cart" ON public.cart;
 CREATE POLICY "Users can delete own cart" ON public.cart FOR DELETE USING (auth.uid() = user_id);

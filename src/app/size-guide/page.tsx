@@ -11,7 +11,7 @@ const clothesSizes = [
   { label: "XL", chest: "40\"", waist: "32\"", length: "46\"" },
 ];
 
-const jewelrySizes = [
+const jewellerySizes = [
   { type: "Rings", standard: "6, 7, 8 (US)", notes: "Adjustable options available" },
   { type: "Bracelets", standard: "7\" - 8\"", notes: "Most include 1\" extender" },
   { type: "Anklets", standard: "9\" - 10\"", notes: "Delicate and adjustable" },
@@ -58,9 +58,9 @@ export default function SizeGuidePage() {
             </section>
 
             <section className="space-y-6">
-              <h2 className="text-3xl font-serif text-text-primary border-b border-border-light pb-2">Jewelry Guidelines</h2>
+              <h2 className="text-3xl font-serif text-text-primary border-b border-border-light pb-2">Jewellery Guidelines</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {jewelrySizes.map((item, i) => (
+                {jewellerySizes.map((item, i) => (
                   <div key={i} className="bg-white p-6 rounded-3xl border border-border-light shadow-sm text-center space-y-3">
                     <h3 className="text-xl font-serif text-text-primary">{item.type}</h3>
                     <p className="text-accent-forest font-bold text-lg">{item.standard}</p>

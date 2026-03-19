@@ -11,7 +11,7 @@ export function HeroSection() {
         <div className="relative w-full h-full md:hidden">
           <Image
             src="/images/hero_banner.png"
-            alt="ZAGULL Elegant Jewelry & Fashion"
+            alt="ZAGULL Elegant Jewellery & Fashion"
             fill
             className="object-cover object-center"
             priority
@@ -22,7 +22,7 @@ export function HeroSection() {
         <div className="relative w-full h-full hidden md:block">
           <Image
             src="/images/hero_banner_desktop_ultra_4k.png"
-            alt="ZAGULL Elegant Jewelry & Fashion - Desktop"
+            alt="ZAGULL Elegant Jewellery & Fashion - Desktop"
             fill
             className="object-cover object-center"
             priority
@@ -43,7 +43,7 @@ export function HeroSection() {
               NEW COLLECTION 2025
             </h2>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-[1.1] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-              Elegant Jewelry <br /> & Fashion
+              Elegant Jewellery <br /> & Fashion
             </h1>
             <p className="text-lg md:text-xl text-white/90 font-sans max-w-lg leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1200 delay-500">
               Discover nature-inspired beauty for the modern woman. Sophisticated designs crafted with passion in Faisalabad.

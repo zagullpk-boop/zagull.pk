@@ -14,8 +14,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "ZAGULL | Elegant Jewelry & Fashion",
-  description: "ZAGULL is a women's artificial jewelry and clothing store based in Faisalabad, Pakistan. Discover nature-inspired elegance.",
+  title: "ZAGULL | Elegant Jewellery & Fashion",
+  description: "ZAGULL is a women's artificial jewellery and clothing store based in Faisalabad, Pakistan. Discover nature-inspired elegance.",
 };
 
 import { CartProvider } from "@/context/CartContext";

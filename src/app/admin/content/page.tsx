@@ -107,7 +107,7 @@ export default function CMSPage() {
                            <textarea 
                              className="w-full bg-gray-50/50 border border-border-light rounded-xl py-2.5 px-3 text-sm focus:ring-1 focus:ring-accent-forest/20 outline-none font-sans resize-none"
                              rows={3}
-                             defaultValue="Discover handcrafted jewelry and apparel inspired by nature's sophisticated palette. Premium quality for the modern woman."
+                             defaultValue="Discover handcrafted jewellery and apparel inspired by nature's sophisticated palette. Premium quality for the modern woman."
                            />
                         </div>
                         <div className="grid grid-cols-2 gap-4">

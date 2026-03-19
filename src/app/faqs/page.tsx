@@ -8,7 +8,7 @@ const faqs = [
   { q: "Do you ship all over Pakistan?", a: "Yes! We ship to all cities in Pakistan via courier services." },
   { q: "How long does delivery take?", a: "Standard delivery takes 3-5 working days. Express delivery is 1-2 days." },
   { q: "Can I return a product?", a: "Yes, we accept returns within 7 days of delivery if the item is unused and in original packaging." },
-  { q: "Are your products original?", a: "All our jewelry and clothing items are carefully curated for quality and authenticity." },
+  { q: "Are your products original?", a: "All our jewellery and clothing items are carefully curated for quality and authenticity." },
   { q: "How can I track my order?", a: "You can track your order from the 'Order Tracking' page using your order ID." },
 ];
 

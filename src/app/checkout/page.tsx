@@ -77,8 +77,15 @@ export default function CheckoutPage() {
     if (currentStep === "shipping") {
       setCurrentStep("payment");
     } else if (currentStep === "payment") {
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
       setIsSubmitting(true);
       try {
+        console.log("Starting order submission for", orderNumber);
+        
         // 1. Create Order in Supabase
         const { data: orderData, error: orderError } = await supabase
           .from('orders')
@@ -92,7 +99,12 @@ export default function CheckoutPage() {
           .select()
           .single();
 
-        if (orderError) throw orderError;
+        if (orderError) {
+          console.error("Order header insertion failed:", orderError);
+          throw orderError;
+        }
+
+        console.log("Order header created successfully:", orderData.id);
 
         // 2. Create Order Items
         const orderItems = cart.map(item => ({
@@ -102,18 +114,25 @@ export default function CheckoutPage() {
           price: item.price
         }));
 
+        console.log("Attempting to insert order items:", orderItems);
+
         const { error: itemsError } = await supabase
           .from('order_items')
           .insert(orderItems);
 
-        if (itemsError) throw itemsError;
+        if (itemsError) {
+          console.error("Order items insertion failed:", itemsError);
+          throw itemsError;
+        }
+
+        console.log("Order items created successfully!");
 
         // 3. Clear Cart & Finalize
         clearCart(); 
         setCurrentStep("confirmation");
-      } catch (err) {
-        console.error("Order submission failed:", err);
-        alert("Failed to place order. Please try again.");
+      } catch (err: any) {
+        console.error("Order submission failed final catch:", err);
+        alert(`Failed to place order: ${err.message || 'Unknown error'}`);
       } finally {
         setIsSubmitting(false);
       }
@@ -189,7 +208,7 @@ export default function CheckoutPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2 md:col-span-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Full Name</label>
+                       <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Full Name</label>
                       <Input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" className="h-12" />
                     </div>
                     <div className="space-y-2">

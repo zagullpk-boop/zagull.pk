@@ -1,43 +1,36 @@
+"use client";
+
+import * as React from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-
-const newProducts = [
-  {
-    id: "1",
-    name: "Emerald Nature Pendant",
-    price: 4500,
-    image: "/images/pendant.png",
-    category: "Jewellery",
-    isNew: true,
-  },
-  {
-    id: "2",
-    name: "Golden Leaf Earrings",
-    price: 3200,
-    image: "/images/earrings.png",
-    category: "Jewellery",
-    isNew: true,
-  },
-  {
-    id: "3",
-    name: "Crystal Dew Bracelet",
-    price: 2800,
-    image: "/images/jewellery_cat.png", // Reusing for variety
-    category: "Jewellery",
-    isNew: true,
-  },
-  {
-    id: "4",
-    name: "Forest Silk Scarf",
-    price: 1500,
-    image: "/images/clothing_cat.png", // Reusing for variety
-    category: "Clothing",
-    isNew: true,
-  },
-];
+import { supabase } from "@/lib/supabase";
+import { Loader2 } from "lucide-react";
 
 export function NewArrivals() {
+  const [products, setProducts] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchNewArrivals() {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('is_new', true)
+          .limit(4);
+        
+        if (error) throw error;
+        setProducts(data || []);
+      } catch (err) {
+        console.error("Error fetching new arrivals:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchNewArrivals();
+  }, []);
+
   return (
     <section className="py-24 px-6 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -53,16 +46,32 @@ export function NewArrivals() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {newProducts.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <Loader2 className="w-8 h-8 animate-spin text-accent-forest opacity-20" />
+            <p className="text-xs text-text-secondary animate-pulse uppercase tracking-widest font-bold">Discovering treasures...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                image={product.image_url}
+                category={product.category}
+                isNew={product.is_new}
+                isOutOfStock={product.stock_status === 'out_of_stock'}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="mt-16 text-center">
-          <Link href="/shop?filter=new">
+          <Link href="/shop?category=All">
             <Button variant="outline" size="lg" className="px-12">
-              View All New Arrivals
+              View All Collections
             </Button>
           </Link>
         </div>

@@ -88,7 +88,7 @@ export default function SettingsPage() {
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Store Tagline</label>
-                         <Input defaultValue="Elegant Jewelry & Fashion" className="bg-gray-50/50 border-border-light" />
+                         <Input defaultValue="Elegant Jewellery & Fashion" className="bg-gray-50/50 border-border-light" />
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Email</label>

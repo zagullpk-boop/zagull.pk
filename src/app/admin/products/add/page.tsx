@@ -288,7 +288,7 @@ export default function AddProductPage() {
                     <h4 className="text-[10px] font-bold text-blue-800 uppercase tracking-widest mb-3">Google Search Preview</h4>
                     <p className="text-blue-600 text-lg hover:underline cursor-pointer font-medium">Golden Heart Pendant | Premium ZAGULL Jewellery</p>
                     <p className="text-emerald-700 text-xs mt-1">zagull.pk › products › golden-heart-pendant</p>
-                    <p className="text-text-secondary text-xs mt-2 leading-relaxed">Shop the elegant Golden Heart Pendant from ZAGULL. Handcrafted jewelry with forest green and rose gold accents. Free shipping on orders over 3000 PKR.</p>
+                    <p className="text-text-secondary text-xs mt-2 leading-relaxed">Shop the elegant Golden Heart Pendant from ZAGULL. Handcrafted jewellery with forest green and rose gold accents. Free shipping on orders over 3000 PKR.</p>
                  </div>
 
                  <div className="space-y-4">

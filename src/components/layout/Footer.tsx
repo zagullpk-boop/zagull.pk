@@ -1,9 +1,25 @@
+"use client";
+
+import * as React from "react";
 import Link from "next/link";
 import { Instagram, Facebook, Send as WhatsApp, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { cn } from "@/lib/utils";
 
 export function Footer() {
+  const [email, setEmail] = React.useState("");
+  const [status, setStatus] = React.useState<"idle" | "loading" | "success">("idle");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("loading");
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setStatus("success");
+    setEmail("");
+  };
   return (
     <footer className="bg-white border-t border-border-light pt-16 pb-8 px-6 md:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -15,7 +31,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
-            Crafting nature-inspired elegance for the modern woman. From Faisalabad to your doorstep, we bring you the finest in artificial jewelry and contemporary clothing.
+            Crafting nature-inspired elegance for the modern woman. From Faisalabad to your doorstep, we bring you the finest in artificial jewellery and contemporary clothing.
           </p>
           <div className="flex space-x-4">
             <Link href="https://wa.me/923001234567" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
@@ -78,12 +94,32 @@ export function Footer() {
             Join our newsletter for exclusive offers and style inspiration.
           </p>
           <div className="space-y-3">
-            <Input 
-              type="email" 
-              placeholder="Your email address" 
-              className="bg-background-primary border-none focus-visible:ring-offset-0"
-            />
-            <Button className="w-full">Subscribe</Button>
+            {status === "success" ? (
+              <div className="bg-accent-forest/10 border border-accent-forest/20 p-4 rounded-2xl animate-in zoom-in duration-300">
+                <p className="text-accent-forest text-sm font-bold flex items-center gap-2">
+                  <span className="w-5 h-5 bg-accent-forest text-white rounded-full flex items-center justify-center text-[10px]">✓</span>
+                  Thank you! You're subscribed.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="space-y-3">
+                <Input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address" 
+                  className="bg-background-primary border-none focus-visible:ring-offset-0 h-11"
+                  required
+                />
+                <Button 
+                  type="submit" 
+                  className="w-full h-11" 
+                  disabled={status === "loading"}
+                >
+                  {status === "loading" ? "Subscribing..." : "Subscribe"}
+                </Button>
+              </form>
+            )}
           </div>
           <div className="pt-4 space-y-3">
             <div className="flex items-center space-x-3 text-text-secondary">

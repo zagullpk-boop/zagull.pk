@@ -12,7 +12,7 @@ export default function AboutPage() {
           <h1 className="text-4xl md:text-6xl font-serif text-text-primary">About ZAGULL</h1>
           <div className="prose prose-lg font-sans text-text-secondary leading-relaxed">
             <p>
-              Welcome to ZAGULL, your destination for elegant artificial jewelry and fashion. Based in Faisalabad, Pakistan, we curate beautiful, affordable pieces that add charm to every woman's style.
+              Welcome to ZAGULL, your destination for elegant artificial jewellery and fashion. Based in Faisalabad, Pakistan, we curate beautiful, affordable pieces that add charm to every woman's style.
             </p>
             <p>
               Each piece is carefully selected for quality and design, bringing you the latest trends without compromising on elegance. Our mission is to make premium aesthetics accessible to everyone.
