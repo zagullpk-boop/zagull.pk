@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   TrendingUp, 
@@ -10,106 +10,161 @@ import {
   DollarSign, 
   Package,
   ArrowUpRight,
-  MoreHorizontal
+  MoreHorizontal,
+  Loader2
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-
-const stats = [
-  {
-    name: "Total Revenue",
-    value: "PKR 125,450",
-    change: "+15.2%",
-    trend: "up",
-    icon: DollarSign,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-  },
-  {
-    name: "Total Orders",
-    value: "142",
-    change: "+8.4%",
-    trend: "up",
-    icon: ShoppingBag,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-  {
-    name: "New Customers",
-    value: "45",
-    change: "+12.1%",
-    trend: "up",
-    icon: Users,
-    color: "text-purple-600",
-    bg: "bg-purple-50",
-  },
-  {
-    name: "Inventory Status",
-    value: "156 Items",
-    change: "8 Low",
-    trend: "neutral",
-    icon: Package,
-    color: "text-amber-600",
-    bg: "bg-amber-50",
-  },
-];
-
-const recentOrders = [
-  { id: "#ZAG-1234", customer: "Sara Ahmed", date: "Jan 15, 3:45 PM", status: "Pending", total: "PKR 2,850", color: "bg-red-100 text-red-700" },
-  { id: "#ZAG-1233", customer: "Ali Hassan", date: "Jan 15, 2:20 PM", status: "Delivered", total: "PKR 1,200", color: "bg-emerald-100 text-emerald-700" },
-  { id: "#ZAG-1232", customer: "Ayesha Khan", date: "Jan 14, 11:30 AM", status: "Shipped", total: "PKR 3,500", color: "bg-amber-100 text-amber-700" },
-  { id: "#ZAG-1231", customer: "Zainab Bibi", date: "Jan 14, 9:15 AM", status: "Confirmed", total: "PKR 4,800", color: "bg-blue-100 text-blue-700" },
-];
-
-const activity = [
-  { type: "order", text: "New order #ZAG-1234 from Sara Ahmed", time: "2 minutes ago", icon: "🛍️" },
-  { type: "user", text: "New customer registration: Ali Hassan", time: "15 minutes ago", icon: "👤" },
-  { type: "review", text: "New review on Golden Heart Pendant - 5 stars", time: "1 hour ago", icon: "⭐" },
-  { type: "stock", text: "Low stock alert: Silver Hoops - only 3 left", time: "2 hours ago", icon: "📦" },
-];
+import { supabase } from "@/lib/supabase";
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchAdminData() {
+      try {
+        setLoading(true);
+        // 1. Fetch Total Revenue
+        const { data: revenueData } = await supabase
+          .from('orders')
+          .select('total_amount');
+        const totalRevenue = revenueData?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0;
+
+        // 2. Fetch Total Orders
+        const { count: orderCount } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true });
+
+        // 3. Fetch Total Customers
+        const { count: customerCount } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact', head: true });
+
+        // 4. Fetch Inventory
+        const { count: productCount } = await supabase
+          .from('products')
+          .select('*', { count: 'exact', head: true });
+
+        setStats([
+          {
+            name: "Total Revenue",
+            value: `PKR ${totalRevenue.toLocaleString()}`,
+            change: "+100%", // New system
+            trend: "up",
+            icon: DollarSign,
+            color: "text-emerald-600",
+            bg: "bg-emerald-50",
+          },
+          {
+            name: "Total Orders",
+            value: orderCount || "0",
+            change: "+100%",
+            trend: "up",
+            icon: ShoppingBag,
+            color: "text-blue-600",
+            bg: "bg-blue-50",
+          },
+          {
+            name: "New Customers",
+            value: customerCount || "0",
+            change: "+100%",
+            trend: "up",
+            icon: Users,
+            color: "text-purple-600",
+            bg: "bg-purple-50",
+          },
+          {
+            name: "Inventory Status",
+            value: `${productCount} Items`,
+            change: "Live",
+            trend: "neutral",
+            icon: Package,
+            color: "text-amber-600",
+            bg: "bg-amber-50",
+          },
+        ]);
+
+        // 5. Fetch Recent Orders (Last 5)
+        const { data: orders } = await supabase
+          .from('orders')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (orders) {
+          setRecentOrders(orders.map(o => ({
+            id: o.order_number,
+            customer: o.shipping_address?.fullName || "Guest",
+            date: new Date(o.created_at).toLocaleDateString(),
+            status: o.status.charAt(0).toUpperCase() + o.status.slice(1),
+            total: `PKR ${Number(o.total_amount).toLocaleString()}`,
+            color: o.status === 'delivered' ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+          })));
+        }
+
+      } catch (err) {
+        console.error("Admin data fetch failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAdminData();
+  }, []);
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-serif text-text-primary">Dashboard Overview</h1>
-          <p className="text-text-secondary text-sm mt-1 font-sans">Welcome back, Zain. Here's what's happening with ZAGULL today.</p>
+          <p className="text-text-secondary text-sm mt-1 font-sans">Welcome back, Zain. Here&apos;s what&apos;s happening with ZAGULL today.</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" className="bg-white border-border-light shadow-sm font-sans font-medium text-xs">
             Generate Report
           </Button>
-          <Button className="bg-accent-forest font-sans font-medium text-xs">
-            Add Product
-          </Button>
+          <Link href="/admin/products">
+            <Button className="bg-accent-forest font-sans font-medium text-xs">
+              Manage Products
+            </Button>
+          </Link>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, i) => (
-          <Card key={i} className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between">
-              <div className={cn("p-2 rounded-xl", stat.bg)}>
-                <stat.icon className={cn("w-5 h-5", stat.color)} />
+        {loading ? (
+          Array(4).fill(0).map((_, i) => (
+            <Card key={i} className="p-6 border-none shadow-sm flex items-center justify-center h-32">
+              <Loader2 className="w-6 h-6 text-accent-forest animate-spin opacity-20" />
+            </Card>
+          ))
+        ) : (
+          stats.map((stat, i) => (
+            <Card key={i} className="p-6 border-none shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between">
+                <div className={cn("p-2 rounded-xl", stat.bg)}>
+                  <stat.icon className={cn("w-5 h-5", stat.color)} />
+                </div>
+                <div className={cn(
+                  "flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full",
+                  stat.trend === "up" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
+                )}>
+                  {stat.trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {stat.change}
+                </div>
               </div>
-              <div className={cn(
-                "flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full",
-                stat.trend === "up" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-              )}>
-                {stat.trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {stat.change}
+              <div className="mt-4">
+                <p className="text-text-secondary text-xs font-medium uppercase tracking-wider">{stat.name}</p>
+                <h3 className="text-2xl font-bold text-text-primary mt-1">{stat.value}</h3>
               </div>
-            </div>
-            <div className="mt-4">
-              <p className="text-text-secondary text-xs font-medium uppercase tracking-wider">{stat.name}</p>
-              <h3 className="text-2xl font-bold text-text-primary mt-1">{stat.value}</h3>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -143,33 +198,21 @@ export default function AdminDashboard() {
           </div>
         </Card>
 
-        {/* Recent Activity */}
-        <Card className="p-6 border-none shadow-sm">
-          <h3 className="text-lg font-serif mb-6">Recent Activity</h3>
-          <div className="space-y-6">
-            {activity.map((item, i) => (
-              <div key={i} className="flex gap-4 relative">
-                {i !== activity.length - 1 && (
-                  <div className="absolute left-[13px] top-8 w-px h-[calc(100%+8px)] bg-border-light" />
-                )}
-                <div className="w-7 h-7 bg-white border border-border-light rounded-lg flex items-center justify-center text-xs shadow-sm z-10 shrink-0">
-                  {item.icon}
-                </div>
-                <div>
-                  <p className="text-xs text-text-primary font-medium leading-tight">{item.text}</p>
-                  <p className="text-[10px] text-text-secondary mt-1">{item.time}</p>
-                </div>
-              </div>
-            ))}
+        {/* Support Alert */}
+        <Card className="p-6 border-none shadow-sm bg-accent-forest text-white">
+          <h3 className="text-lg font-serif mb-4 italic">Nature First</h3>
+          <p className="text-xs opacity-80 leading-relaxed font-sans">
+            Remember that all orders must be packed in our biodegradable nature-inspired materials. Check stock of forest-green boxes today.
+          </p>
+          <div className="mt-8 p-4 bg-white/10 rounded-2xl border border-white/20">
+            <p className="text-[10px] uppercase font-bold tracking-widest opacity-60 mb-2">Sustainability Tip</p>
+            <p className="text-xs font-medium">Reusing forest clippings for cushioning reduced waste by 12% last month.</p>
           </div>
-          <Button variant="outline" className="w-full mt-8 border-border-light text-xs font-sans hover:bg-gray-50">
-            View All Activity
-          </Button>
         </Card>
       </div>
 
       {/* Recent Orders Table */}
-      <Card className="p-0 border-none shadow-sm overflow-hidden">
+      <Card className="p-0 border-none shadow-sm overflow-hidden text-sm">
         <div className="p-6 flex items-center justify-between border-b border-border-light">
           <h3 className="text-lg font-serif">Recent Orders</h3>
           <Link href="/admin/orders" className="text-xs text-accent-forest font-bold hover:underline font-sans">
@@ -177,38 +220,49 @@ export default function AdminDashboard() {
           </Link>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left font-sans">
-            <thead className="bg-[#F8F9FA]">
-              <tr>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Order ID</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Customer</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Date</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Amount</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Status</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-light">
-              {recentOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-bold text-text-primary">{order.id}</td>
-                  <td className="px-6 py-4 text-sm text-text-primary">{order.customer}</td>
-                  <td className="px-6 py-4 text-xs text-text-secondary">{order.date}</td>
-                  <td className="px-6 py-4 text-sm font-bold text-text-primary">{order.total}</td>
-                  <td className="px-6 py-4">
-                    <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold", order.color)}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="p-1 hover:bg-white rounded border border-transparent hover:border-border-light transition-all">
-                      <ArrowUpRight className="w-4 h-4 text-text-secondary" />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-20 text-center">
+              <Loader2 className="w-8 h-8 text-accent-forest animate-spin mx-auto opacity-20" />
+            </div>
+          ) : recentOrders.length === 0 ? (
+            <div className="p-20 text-center">
+              <Package className="w-12 h-12 text-text-secondary/10 mx-auto mb-4" />
+              <p className="text-text-secondary italic">No orders found yet.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left font-sans">
+              <thead className="bg-[#F8F9FA]">
+                <tr>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Order ID</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Customer</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Date</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Amount</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest">Status</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-text-secondary uppercase tracking-widest text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-border-light">
+                {recentOrders.map((order) => (
+                  <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-text-primary">{order.id}</td>
+                    <td className="px-6 py-4 text-text-primary">{order.customer}</td>
+                    <td className="px-6 py-4 text-xs text-text-secondary">{order.date}</td>
+                    <td className="px-6 py-4 font-bold text-text-primary">{order.total}</td>
+                    <td className="px-6 py-4">
+                      <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold", order.color)}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="p-1 hover:bg-white rounded border border-transparent hover:border-border-light transition-all">
+                        <ArrowUpRight className="w-4 h-4 text-text-secondary" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </Card>
     </div>

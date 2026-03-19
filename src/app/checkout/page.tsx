@@ -17,9 +17,11 @@ import {
   ArrowLeft, 
   Truck,
   ShieldCheck,
-  Package
+  Package,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 type Step = "shipping" | "payment" | "confirmation";
 
@@ -29,6 +31,8 @@ export default function CheckoutPage() {
   const [currentStep, setCurrentStep] = React.useState<Step>("shipping");
   const [mounted, setMounted] = React.useState(false);
   const [orderNumber, setOrderNumber] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [user, setUser] = React.useState<any>(null);
 
   // Controlled form state
   const [formData, setFormData] = React.useState({
@@ -46,6 +50,18 @@ export default function CheckoutPage() {
     // Generate a random order number once on mount
     const randomId = Math.floor(100000 + Math.random() * 900000);
     setOrderNumber(`#ZGL-${randomId}`);
+
+    // Get current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUser(user);
+        setFormData(prev => ({
+          ...prev,
+          fullName: user.user_metadata?.full_name || prev.fullName,
+          email: user.email || prev.email
+        }));
+      }
+    });
   }, []);
 
   if (!mounted) return null;
@@ -57,12 +73,50 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep === "shipping") {
       setCurrentStep("payment");
     } else if (currentStep === "payment") {
-      clearCart(); // Clear cart when order is placed
-      setCurrentStep("confirmation");
+      setIsSubmitting(true);
+      try {
+        // 1. Create Order in Supabase
+        const { data: orderData, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            user_id: user?.id || null,
+            total_amount: totalAmount,
+            status: 'pending',
+            shipping_address: formData,
+            order_number: orderNumber
+          })
+          .select()
+          .single();
+
+        if (orderError) throw orderError;
+
+        // 2. Create Order Items
+        const orderItems = cart.map(item => ({
+          order_id: orderData.id,
+          product_id: item.id,
+          quantity: item.quantity,
+          price: item.price
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('order_items')
+          .insert(orderItems);
+
+        if (itemsError) throw itemsError;
+
+        // 3. Clear Cart & Finalize
+        clearCart(); 
+        setCurrentStep("confirmation");
+      } catch (err) {
+        console.error("Order submission failed:", err);
+        alert("Failed to place order. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -204,11 +258,24 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-4 pt-6">
-                    <Button onClick={handleNext} className="flex-grow h-14 text-lg">
-                      Complete Order
-                      <ChevronRight className="w-5 h-5 ml-2" />
+                    <Button 
+                      onClick={handleNext} 
+                      className="flex-grow h-14 text-lg"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Complete Order
+                          <ChevronRight className="w-5 h-5 ml-2" />
+                        </>
+                      )}
                     </Button>
-                    <Button variant="outline" onClick={handleBack} className="h-14 px-12">
+                    <Button variant="outline" onClick={handleBack} className="h-14 px-12" disabled={isSubmitting}>
                       Go Back
                     </Button>
                   </div>
