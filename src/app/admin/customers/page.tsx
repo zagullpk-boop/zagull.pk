@@ -8,7 +8,7 @@ import { Search, Filter, MoreHorizontal, Mail, Phone, Calendar, ArrowUpRight } f
 import { cn } from "@/lib/utils";
 
 const customers = [
-  { id: 1, name: "Sara Ahmed", email: "sara@example.com", phone: "+92 300 1234567", orders: 5, spent: "PKR 12,450", lastOrder: "2 days ago" },
+  { id: 1, name: "Sara Ahmed", email: "sara@example.com", phone: "+92 344 7018335", orders: 5, spent: "PKR 12,450", lastOrder: "2 days ago" },
   { id: 2, name: "Ali Hassan", email: "ali@example.com", phone: "+92 321 7654321", orders: 2, spent: "PKR 4,200", lastOrder: "15 mins ago" },
   { id: 3, name: "Ayesha Khan", email: "ayesha@example.com", phone: "+92 345 9876543", orders: 8, spent: "PKR 22,100", lastOrder: "1 week ago" },
   { id: 4, name: "Zainab Bibi", email: "zainab@example.com", phone: "+92 312 3456789", orders: 1, spent: "PKR 1,500", lastOrder: "3 hours ago" },

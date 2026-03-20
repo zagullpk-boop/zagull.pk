@@ -221,7 +221,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   <div className="w-8 h-8 rounded-lg bg-gray-50 border border-border-light flex items-center justify-center group-hover:bg-white transition-colors">
                      <Phone className="w-4 h-4 text-text-secondary group-hover:text-accent-forest" />
                   </div>
-                  <p className="text-xs text-text-primary font-medium tracking-tight">+92 300 1234567</p>
+                  <p className="text-xs text-text-primary font-medium tracking-tight">+92 344 7018335</p>
                </div>
             </div>
 

@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
 
             <section className="space-y-4 bg-white p-8 rounded-3xl border border-border-light">
               <h2 className="text-2xl font-serif text-text-primary">Contact Us</h2>
-              <p>If you have any questions regarding this privacy policy or how we handle your data, please contact us at <strong>support@zagull.pk</strong>.</p>
+              <p>If you have any questions regarding this privacy policy or how we handle your data, please contact us at <strong>hello@zagull.pk</strong>.</p>
             </section>
           </div>
         </div>
