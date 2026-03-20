@@ -55,8 +55,8 @@ export default function AdminLayout({
     fetchCounts();
     
     // Subscribe to changes
-    const orderSub = supabase.channel('orders_count').on('postgres_changes', { event: '*', table: 'orders' }, fetchCounts).subscribe();
-    const msgSub = supabase.channel('msgs_count').on('postgres_changes', { event: '*', table: 'messages' }, fetchCounts).subscribe();
+    const orderSub = supabase.channel('orders_count').on('postgres_changes' as any, { event: '*', table: 'orders' }, fetchCounts).subscribe();
+    const msgSub = supabase.channel('msgs_count').on('postgres_changes' as any, { event: '*', table: 'messages' }, fetchCounts).subscribe();
     
     return () => {
       supabase.removeChannel(orderSub);
@@ -144,7 +144,7 @@ export default function AdminLayout({
                           {item.name}
                         </div>
                         <div className="flex items-center gap-2">
-                          {item.badge > 0 && (
+                          {item.badge !== undefined && item.badge > 0 && (
                             <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{item.badge}</span>
                           )}
                           <ChevronDown className={cn("w-3 h-3 transition-transform", isExpanded && "rotate-180")} />
@@ -179,7 +179,7 @@ export default function AdminLayout({
                         <item.icon className="w-4 h-4" />
                         {item.name}
                       </div>
-                      {item.badge > 0 && (
+                      {item.badge !== undefined && item.badge > 0 && (
                         <span className={cn(
                           "text-[10px] px-2 py-0.5 rounded-full font-bold",
                           pathname === item.href ? "bg-white text-accent-forest" : "bg-red-500 text-white"

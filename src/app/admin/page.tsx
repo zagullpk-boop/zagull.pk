@@ -32,6 +32,8 @@ import {
   Cell
 } from 'recharts';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
   const [revenueChartData, setRevenueChartData] = useState<any[]>([]);
@@ -40,8 +42,8 @@ export default function AdminDashboard() {
   const [error, setError] = useState(false);
 
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   );
 
   const fetchData = async () => {

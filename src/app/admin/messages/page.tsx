@@ -7,6 +7,8 @@ import { MessageSquare, Search, Trash2, Reply, CheckCircle, Clock, Loader2, User
 import { cn } from "@/lib/utils";
 import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminMessagesPage() {
   const [messages, setMessages] = useState<any[]>([]);
   const [selectedMsg, setSelectedMsg] = useState<any>(null);
@@ -14,8 +16,8 @@ export default function AdminMessagesPage() {
   const [search, setSearch] = useState("");
   
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   );
 
   const fetchMessages = async () => {

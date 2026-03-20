@@ -1,13 +1,22 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: { autoRefreshToken: false, persistSession: false }
-})
+const getAdminClient = () => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return null;
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
+};
 
 export async function getDashboardStats() {
+  const supabaseAdmin = getAdminClient();
+  if (!supabaseAdmin) throw new Error('Supabase Admin client not initialized');
+
   const now = new Date()
   const firstDayCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1)
   const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
@@ -29,8 +38,8 @@ export async function getDashboardStats() {
     .neq('status', 'cancelled')
     .neq('status', 'draft')
 
-  const currentRevenue = currentMonthOrders?.reduce((acc, o) => acc + Number(o.total_amount), 0) || 0
-  const lastRevenue = lastMonthOrders?.reduce((acc, o) => acc + Number(o.total_amount), 0) || 0
+  const currentRevenue = currentMonthOrders?.reduce((acc: number, o: any) => acc + Number(o.total_amount), 0) || 0
+  const lastRevenue = lastMonthOrders?.reduce((acc: number, o: any) => acc + Number(o.total_amount), 0) || 0
   
   const revenueGrowth = lastRevenue === 0 ? 100 : ((currentRevenue - lastRevenue) / lastRevenue) * 100
 
@@ -59,7 +68,7 @@ export async function getDashboardStats() {
     .select('total_amount')
     .neq('status', 'cancelled')
 
-  const totalRevenue = allRevenue?.reduce((acc, o) => acc + Number(o.total_amount), 0) || 0
+  const totalRevenue = allRevenue?.reduce((acc: number, o: any) => acc + Number(o.total_amount), 0) || 0
   
   const { count: totalOrders } = await supabaseAdmin
     .from('orders')
@@ -74,8 +83,10 @@ export async function getDashboardStats() {
 }
 
 export async function getRevenueData() {
+  const supabaseAdmin = getAdminClient();
+  if (!supabaseAdmin) return [];
+
   // Fetch last 6 months for chart
-  const months = []
   const data = []
   for (let i = 5; i >= 0; i--) {
     const d = new Date()
@@ -91,7 +102,7 @@ export async function getRevenueData() {
       .lte('created_at', end)
       .neq('status', 'cancelled')
     
-    const total = monthlyOrders?.reduce((acc, o) => acc + Number(o.total_amount), 0) || 0
+    const total = monthlyOrders?.reduce((acc: number, o: any) => acc + Number(o.total_amount), 0) || 0
     data.push({ name: monthName, revenue: total })
   }
   return data

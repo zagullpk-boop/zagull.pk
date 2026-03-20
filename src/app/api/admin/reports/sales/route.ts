@@ -1,12 +1,21 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+export const dynamic = 'force-dynamic';
 
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+// Initialize outside for reuse, but handle missing keys during static build phase
+const supabaseAdmin = (supabaseUrl && supabaseServiceKey) 
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null;
 
 export async function GET() {
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
+  }
+
   try {
     const { data: orders, error } = await supabaseAdmin
       .from('orders')
