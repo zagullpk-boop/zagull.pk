@@ -92,11 +92,11 @@ export default function SettingsPage() {
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Email</label>
-                         <Input defaultValue="hello@zagull.pk" className="bg-gray-50/50 border-border-light" />
+                         <Input defaultValue="support@zagull.pk" className="bg-gray-50/50 border-border-light" />
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">WhatsApp Number</label>
-                         <Input defaultValue="+92 344 7018335" className="bg-gray-50/50 border-border-light" />
+                         <Input defaultValue="+92 332 9024005" className="bg-gray-50/50 border-border-light" />
                       </div>
                    </div>
                    <div className="space-y-2 font-sans">

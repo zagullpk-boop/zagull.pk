@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { 
   Instagram, 
-  Facebook, 
-  Send as WhatsApp, 
+  MessageCircle as WhatsApp, 
+  Music as TikTok, 
   Mail, 
   Phone, 
   MapPin 
@@ -15,7 +15,6 @@ import {
   ZAGULL_WHATSAPP, 
   ZAGULL_EMAIL, 
   ZAGULL_INSTAGRAM, 
-  ZAGULL_FACEBOOK,
   ZAGULL_TIKTOK,
   ZAGULL_ADDRESS
 } from "@/lib/constants";
@@ -39,14 +38,14 @@ export function Footer() {
             Crafting nature-inspired elegance for the modern woman. From Faisalabad to your doorstep, we bring you the finest in artificial jewellery and contemporary clothing.
           </p>
           <div className="flex space-x-4">
-            <Link href={ZAGULL_INSTAGRAM} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
+            <Link href={ZAGULL_INSTAGRAM} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all" aria-label="Instagram">
               <Instagram className="w-5 h-5" />
             </Link>
-            <Link href={ZAGULL_FACEBOOK} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
-              <Facebook className="w-5 h-5" />
-            </Link>
-            <Link href={ZAGULL_WHATSAPP} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
+            <Link href={ZAGULL_WHATSAPP} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all" aria-label="WhatsApp">
               <WhatsApp className="w-5 h-5" />
+            </Link>
+            <Link href={ZAGULL_TIKTOK} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all" aria-label="TikTok">
+              <TikTok className="w-5 h-5" />
             </Link>
           </div>
         </div>
