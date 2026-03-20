@@ -221,7 +221,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-2">
             <NotificationBell />
             <div className="h-8 w-px bg-gray-100 mx-4" />
-            <AdminUserMenu initialName="Admin Zain" initialEmail="admin@zagull.pk" />
+            <AdminUserMenu initialName="Admin Zain" initialEmail="zagull.pk@gmail.com" />
           </div>
         </header>
 

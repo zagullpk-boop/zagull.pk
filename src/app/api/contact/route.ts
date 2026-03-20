@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     await resend.emails.send({
-      from: 'Zagull Contact Form <noreply@zagull.pk>',
+      from: 'Zagull Contact Form <zagull.pk@gmail.com>',
       to: [ZAGULL_EMAIL],
       replyTo: email,
       subject: subject || `New message from ${name}`,

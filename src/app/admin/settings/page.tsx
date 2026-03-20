@@ -92,7 +92,7 @@ export default function SettingsPage() {
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Email</label>
-                         <Input defaultValue="support@zagull.pk" className="bg-gray-50/50 border-border-light" />
+                         <Input defaultValue="zagull.pk@gmail.com" className="bg-gray-50/50 border-border-light" />
                       </div>
                       <div className="space-y-2">
                          <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">WhatsApp Number</label>
@@ -155,7 +155,7 @@ export default function SettingsPage() {
                          <div className="w-10 h-10 rounded-full bg-accent-forest text-white flex items-center justify-center font-bold text-sm">AZ</div>
                          <div>
                             <p className="text-sm font-bold text-text-primary">Admin Zain (You)</p>
-                            <p className="text-[10px] text-text-secondary">hello@zagull.pk • Super Admin</p>
+                            <p className="text-[10px] text-text-secondary">zagull.pk@gmail.com • Super Admin</p>
                          </div>
                       </div>
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -78,7 +78,7 @@ function LoginForm() {
                 type="email" 
                 value={email} 
                 onChange={e => setEmail(e.target.value)}
-                placeholder="admin@zagull.pk" 
+                placeholder="zagull.pk@gmail.com" 
                 required 
                 autoComplete="email"
                 className="w-full border border-gray-100 bg-gray-50/50 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/5 focus:bg-white transition-all placeholder:text-gray-300"
