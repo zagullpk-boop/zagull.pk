@@ -30,33 +30,43 @@ export function Newsletter() {
         </p>
 
         {submitted ? (
-          <div className="flex flex-col items-center gap-3 py-4">
-            <CheckCircle2 className="w-10 h-10 text-white" />
-            <p className="text-lg font-serif">
-              You&apos;re on the list! Check <strong>{email}</strong> for your 10% off code.
-            </p>
+          <div className="flex flex-col items-center gap-4 py-8 animate-in zoom-in duration-500">
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
+              <CheckCircle2 className="w-8 h-8 text-white" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif">Welcome to the inner circle!</h3>
+              <p className="text-white/80 font-sans">
+                A welcome gift has been sent to <strong>{email}</strong>.
+              </p>
+            </div>
           </div>
         ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email address"
-              required
-              className="flex-grow bg-white/10 border border-white/20 rounded-lg px-6 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all"
-            />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-white text-accent-forest px-8 py-3 rounded-lg font-medium hover:bg-white/90 transition-all disabled:opacity-70"
+          <div className="space-y-8">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
             >
-              {isLoading ? "Joining..." : "Join Now"}
-            </button>
-          </form>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+                className="flex-grow bg-white/10 border border-white/20 rounded-lg px-6 py-4 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all font-sans"
+              />
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="bg-white text-accent-forest px-10 py-4 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-background-primary transition-all disabled:opacity-70 shadow-xl active:scale-95"
+              >
+                {isLoading ? "Joining..." : "Join Now"}
+              </button>
+            </form>
+            <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-medium">
+              Secure & Private • Unsubscribe at any time
+            </p>
+          </div>
         )}
       </div>
     </section>

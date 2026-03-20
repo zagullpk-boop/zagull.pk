@@ -17,12 +17,13 @@ import { Suspense } from "react";
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "All";
+  const initialSubCategory = searchParams.get("sub") || "All";
   const initialSearch = searchParams.get("q") || "";
   
   const [products, setProducts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [activeCategory, setActiveCategory] = React.useState(initialCategory);
-  const [activeSubCategory, setActiveSubCategory] = React.useState("All");
+  const [activeSubCategory, setActiveSubCategory] = React.useState(initialSubCategory);
   const [searchQuery, setSearchQuery] = React.useState(initialSearch);
   const [sortBy, setSortBy] = React.useState("latest");
   const [showFilters, setShowFilters] = React.useState(false);
@@ -51,6 +52,7 @@ function ShopContent() {
   // Update category if query param changes
   React.useEffect(() => {
     setActiveCategory(searchParams.get("category") || "All");
+    setActiveSubCategory(searchParams.get("sub") || "All");
     setSearchQuery(searchParams.get("q") || "");
   }, [searchParams]);
 

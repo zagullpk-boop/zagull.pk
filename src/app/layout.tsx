@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 
 export default function RootLayout({
   children,
@@ -32,6 +33,7 @@ export default function RootLayout({
         <CartProvider>
           <WishlistProvider>
             {children}
+            <WhatsAppButton />
           </WishlistProvider>
         </CartProvider>
       </body>

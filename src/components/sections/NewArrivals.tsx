@@ -10,25 +10,46 @@ import { Loader2 } from "lucide-react";
 export function NewArrivals() {
   const [products, setProducts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    let isMounted = true;
+    
     async function fetchNewArrivals() {
+      // Set a safety timeout for 5 seconds
+      const timeoutId = setTimeout(() => {
+        if (loading && isMounted) {
+          setLoading(false);
+          setError("Request timed out. Please refresh.");
+        }
+      }, 5000);
+
       try {
-        const { data, error } = await supabase
+        const { data, error: supabaseError } = await supabase
           .from('products')
           .select('*')
           .eq('is_new', true)
           .limit(4);
         
-        if (error) throw error;
+        clearTimeout(timeoutId);
+        if (!isMounted) return;
+
+        if (supabaseError) throw supabaseError;
         setProducts(data || []);
       } catch (err) {
-        console.error("Error fetching new arrivals:", err);
+        if (isMounted) {
+          console.error("Error fetching new arrivals:", err);
+          setError("Failed to load products.");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
     fetchNewArrivals();
+
+    return () => { isMounted = false; };
   }, []);
 
   return (
@@ -51,7 +72,14 @@ export function NewArrivals() {
             <Loader2 className="w-8 h-8 animate-spin text-accent-forest opacity-20" />
             <p className="text-xs text-text-secondary animate-pulse uppercase tracking-widest font-bold">Discovering treasures...</p>
           </div>
-        ) : (
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+            <p className="text-sm text-text-secondary italic">{error}</p>
+            <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
+        ) : products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product) => (
               <ProductCard 
@@ -65,6 +93,10 @@ export function NewArrivals() {
                 isOutOfStock={product.stock_status === 'out_of_stock'}
               />
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 border border-dashed border-border-light rounded-3xl">
+            <p className="text-text-secondary font-sans italic">Our latest collection is arriving soon.</p>
           </div>
         )}
 

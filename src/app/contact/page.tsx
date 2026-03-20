@@ -52,7 +52,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-text-secondary">Email</p>
-                  <p className="text-text-primary font-medium">support@zagull.pk</p>
+                  <p className="text-text-primary font-medium">hello@zagull.pk</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -61,7 +61,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-text-secondary">Phone</p>
-                  <p className="text-text-primary font-medium">+92 300 1234567</p>
+                  <p className="text-text-primary font-medium">+92 344 7018335</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">

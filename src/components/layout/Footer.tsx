@@ -34,13 +34,13 @@ export function Footer() {
             Crafting nature-inspired elegance for the modern woman. From Faisalabad to your doorstep, we bring you the finest in artificial jewellery and contemporary clothing.
           </p>
           <div className="flex space-x-4">
-            <Link href="https://wa.me/923001234567" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
+            <Link href="https://instagram.com/zagull.pk" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
               <Instagram className="w-5 h-5" />
             </Link>
-            <Link href="https://wa.me/923001234567" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
+            <Link href="https://facebook.com/zagull.pk" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
               <Facebook className="w-5 h-5" />
             </Link>
-            <Link href="https://wa.me/923001234567" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
+            <Link href="https://wa.me/923447018335" target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all">
               <WhatsApp className="w-5 h-5" />
             </Link>
           </div>
@@ -124,7 +124,7 @@ export function Footer() {
           <div className="pt-4 space-y-3">
             <div className="flex items-center space-x-3 text-text-secondary">
               <Phone className="w-4 h-4" />
-              <span className="text-xs">+92 300 1234567</span>
+              <span className="text-xs">+92 344 7018335</span>
             </div>
             <div className="flex items-center space-x-3 text-text-secondary">
               <Mail className="w-4 h-4" />

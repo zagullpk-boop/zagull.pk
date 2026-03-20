@@ -15,7 +15,9 @@ CREATE POLICY "Enable insert for all users" ON public.order_items FOR INSERT WIT
 DROP POLICY IF EXISTS "Enable select for all users" ON public.order_items;
 CREATE POLICY "Enable select for all users" ON public.order_items FOR SELECT USING (true);
 
--- 3. FIX PRODUCTS UPDATE (For Admin)
+-- 3. FIX PRODUCTS (Public Read, Admin Write)
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.products;
+CREATE POLICY "Enable read access for all users" ON public.products FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Allow update for everyone" ON public.products;
 CREATE POLICY "Allow update for everyone" ON public.products FOR UPDATE USING (true);
 DROP POLICY IF EXISTS "Allow delete for everyone" ON public.products;

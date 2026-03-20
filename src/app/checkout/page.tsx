@@ -75,6 +75,15 @@ export default function CheckoutPage() {
 
   const handleNext = async () => {
     if (currentStep === "shipping") {
+      // Basic validation
+      if (!formData.fullName || !formData.email || !formData.phone || !formData.address) {
+        alert("Please fill in all required shipping details.");
+        return;
+      }
+      if (!formData.email.includes("@")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
       setCurrentStep("payment");
     } else if (currentStep === "payment") {
       if (cart.length === 0) {
