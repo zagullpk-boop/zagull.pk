@@ -2,6 +2,7 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ZAGULL_EMAIL } from "@/lib/constants";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -37,7 +38,7 @@ export default function PrivacyPolicyPage() {
 
             <section className="space-y-4 bg-white p-8 rounded-3xl border border-border-light">
               <h2 className="text-2xl font-serif text-text-primary">Contact Us</h2>
-              <p>If you have any questions regarding this privacy policy or how we handle your data, please contact us at <strong>hello@zagull.pk</strong>.</p>
+              <p>If you have any questions regarding this privacy policy or how we handle your data, please contact us at <a href={`mailto:${ZAGULL_EMAIL}`} className="font-bold text-accent-forest hover:underline">{ZAGULL_EMAIL}</a>.</p>
             </section>
           </div>
         </div>

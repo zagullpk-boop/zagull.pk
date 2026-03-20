@@ -2,6 +2,7 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ZAGULL_EMAIL, ZAGULL_WHATSAPP } from "@/lib/constants";
 
 export default function ReturnsPage() {
   return (
@@ -41,9 +42,14 @@ export default function ReturnsPage() {
 
             <section className="bg-white p-8 rounded-3xl border border-border-light shadow-sm space-y-4">
               <h2 className="text-2xl font-serif text-text-primary">How to Return</h2>
-              <p className="text-text-secondary font-sans leading-relaxed">
-                Contact our support team at <strong>hello@zagull.pk</strong> or message us on WhatsApp with your Order ID and photos of the item. Once approved, you can ship the item back to our Faisalabad warehouse.
-              </p>
+              <div className="space-y-4 text-text-secondary font-sans leading-relaxed">
+                <p>
+                  Contact our support team at <a href={`mailto:${ZAGULL_EMAIL}`} className="font-bold text-accent-forest hover:underline">{ZAGULL_EMAIL}</a> or message us on <a href={ZAGULL_WHATSAPP} target="_blank" rel="noopener noreferrer" className="font-bold text-accent-forest hover:underline">WhatsApp</a> with your Order ID and photos of the item.
+                </p>
+                <p>
+                  Once approved, you can ship the item back to our Faisalabad warehouse.
+                </p>
+              </div>
               <p className="text-sm text-text-secondary italic pt-2">
                 * Note: Return shipping costs are the responsibility of the customer unless the item was damaged or incorrect.
               </p>

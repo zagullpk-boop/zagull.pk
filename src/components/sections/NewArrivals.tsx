@@ -68,9 +68,16 @@ export function NewArrivals() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <Loader2 className="w-8 h-8 animate-spin text-accent-forest opacity-20" />
-            <p className="text-xs text-text-secondary animate-pulse uppercase tracking-widest font-bold">Discovering treasures...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse space-y-4">
+                <div className="bg-background-secondary rounded-3xl aspect-[4/5] w-full" />
+                <div className="space-y-2">
+                  <div className="bg-background-secondary h-4 w-2/3 rounded-full" />
+                  <div className="bg-background-secondary h-4 w-1/3 rounded-full" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">

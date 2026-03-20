@@ -243,11 +243,18 @@ function ShopContent() {
             {/* Product Grid */}
             <div className="flex-grow">
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-32 space-y-4">
-                  <Loader2 className="w-10 h-10 animate-spin text-accent-forest" />
-                  <p className="text-text-secondary animate-pulse">Loading collection...</p>
-                </div>
-              ) : filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="animate-pulse space-y-4">
+                    <div className="bg-background-secondary rounded-3xl aspect-[4/5] w-full" />
+                    <div className="space-y-2">
+                      <div className="bg-background-secondary h-4 w-2/3 rounded-full" />
+                      <div className="bg-background-secondary h-4 w-1/3 rounded-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in duration-700">
                   {filteredProducts.map((product) => (
                     <ProductCard

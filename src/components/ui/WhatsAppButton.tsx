@@ -3,6 +3,7 @@
 import React from "react";
 import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ZAGULL_WHATSAPP } from "@/lib/constants";
 
 interface WhatsAppButtonProps {
   className?: string;
@@ -26,7 +27,7 @@ export function WhatsAppButton({ className }: WhatsAppButtonProps) {
 
   return (
     <a
-      href="https://wa.me/923447018335"
+      href={ZAGULL_WHATSAPP}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(

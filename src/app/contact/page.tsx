@@ -5,7 +5,13 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Mail, Phone, MapPin, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, CheckCircle2, AlertCircle } from "lucide-react";
+import { 
+  ZAGULL_PHONE, 
+  ZAGULL_WHATSAPP, 
+  ZAGULL_EMAIL, 
+  ZAGULL_ADDRESS 
+} from "@/lib/constants";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,8 +20,7 @@ export default function ContactPage() {
     subject: "",
     message: "",
   });
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,15 +28,27 @@ export default function ContactPage() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
-    setIsLoading(true);
-    // Simulate network call — replace with real API when ready
-    setTimeout(() => {
-      setIsLoading(false);
-      setSubmitted(true);
-    }, 800);
+    setStatus("loading");
+    
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      
+      if (res.ok) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setStatus("error");
+    }
   };
 
   return (
@@ -46,52 +63,52 @@ export default function ContactPage() {
             </p>
             
             <div className="space-y-6 pt-4">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <Mail className="w-5 h-5 text-accent-forest" />
+              <div className="flex items-center space-x-4 group">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-accent-forest transition-colors">
+                  <Mail className="w-5 h-5 text-accent-forest group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-text-secondary">Email</p>
-                  <p className="text-text-primary font-medium">hello@zagull.pk</p>
+                  <a href={`mailto:${ZAGULL_EMAIL}`} className="text-text-primary font-medium hover:text-accent-forest transition-colors">{ZAGULL_EMAIL}</a>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <Phone className="w-5 h-5 text-accent-forest" />
+              <div className="flex items-center space-x-4 group">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-accent-forest transition-colors">
+                  <Phone className="w-5 h-5 text-accent-forest group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-text-secondary">Phone</p>
-                  <p className="text-text-primary font-medium">+92 344 7018335</p>
+                  <a href={ZAGULL_WHATSAPP} target="_blank" rel="noopener noreferrer" className="text-text-primary font-medium hover:text-accent-forest transition-colors">{ZAGULL_PHONE}</a>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <MapPin className="w-5 h-5 text-accent-forest" />
+              <div className="flex items-center space-x-4 group">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-accent-forest transition-colors">
+                  <MapPin className="w-5 h-5 text-accent-forest group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-text-secondary">Location</p>
-                  <p className="text-text-primary font-medium">Faisalabad, Pakistan</p>
+                  <p className="text-text-primary font-medium">{ZAGULL_ADDRESS}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-3xl border border-border-light shadow-sm">
-            {submitted ? (
-              <div className="flex flex-col items-center justify-center h-full py-16 space-y-6 text-center">
+            {status === "success" ? (
+              <div className="flex flex-col items-center justify-center h-full py-16 space-y-6 text-center animate-in zoom-in duration-500">
                 <div className="w-20 h-20 bg-accent-forest/10 rounded-full flex items-center justify-center">
                   <CheckCircle2 className="w-10 h-10 text-accent-forest" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-serif text-text-primary">Message Sent!</h3>
                   <p className="text-text-secondary font-sans text-sm">
-                    Thank you, {formData.name}. We&apos;ll get back to you within 24 hours.
+                    Thank you, {formData.name}. We&apos;ll get back to you within 24 hours at {formData.email}.
                   </p>
                 </div>
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setSubmitted(false);
+                    setStatus("idle");
                     setFormData({ name: "", email: "", subject: "", message: "" });
                   }}
                 >
@@ -149,9 +166,15 @@ export default function ContactPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full h-12" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send Message"}
-                </Button>
+                  <Button type="submit" className="w-full h-12" disabled={status === "loading"}>
+                    {status === "loading" ? "Sending..." : "Send Message"}
+                  </Button>
+                  {status === "error" && (
+                    <div className="flex items-center gap-2 text-red-500 text-xs font-medium justify-center animate-in fade-in slide-in-from-top-1">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      Something went wrong. Please try again or WhatsApp us directly.
+                    </div>
+                  )}
               </form>
             )}
           </div>

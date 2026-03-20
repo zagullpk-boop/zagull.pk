@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -21,37 +21,10 @@ import {
   Search
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { 
-    name: "Products", 
-    href: "/admin/products", 
-    icon: Package,
-    children: [
-      { name: "All Products", href: "/admin/products" },
-      { name: "Add New", href: "/admin/products/add" },
-      { name: "Categories", href: "/admin/products/categories" },
-      { name: "Bundles", href: "/admin/products/bundles" },
-    ]
-  },
-  { 
-    name: "Orders", 
-    href: "/admin/orders", 
-    icon: ShoppingBag,
-    badge: 12,
-    children: [
-      { name: "All Orders", href: "/admin/orders" },
-      { name: "Pending", href: "/admin/orders?status=Pending" },
-      { name: "Confirmed", href: "/admin/orders?status=Confirmed" },
-    ]
-  },
-  { name: "Customers", href: "/admin/customers", icon: Users },
-  { name: "Messages", href: "/admin/messages", icon: MessageSquare, badge: 3 },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { name: "Content", href: "/admin/content", icon: PenTool },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
-];
+import AdminUserMenu from "@/components/admin/AdminUserMenu";
+import NotificationBell from "@/components/admin/NotificationBell";
+import CommandPalette from "@/components/admin/CommandPalette";
+import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
 
 export default function AdminLayout({
   children,
@@ -61,6 +34,69 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [expandedItems, setExpandedItems] = useState<string[]>(["Products", "Orders"]);
+  const [counts, setCounts] = useState({ orders: 0, messages: 0 });
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const [orderCount, messageCount] = await Promise.all([
+        supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'cancelled').neq('status', 'draft'),
+        supabase.from('messages').select('*', { count: 'exact', head: true }).eq('is_read', false)
+      ]);
+      setCounts({
+        orders: orderCount.count || 0,
+        messages: messageCount.count || 0
+      });
+    };
+    fetchCounts();
+    
+    // Subscribe to changes
+    const orderSub = supabase.channel('orders_count').on('postgres_changes', { event: '*', table: 'orders' }, fetchCounts).subscribe();
+    const msgSub = supabase.channel('msgs_count').on('postgres_changes', { event: '*', table: 'messages' }, fetchCounts).subscribe();
+    
+    return () => {
+      supabase.removeChannel(orderSub);
+      supabase.removeChannel(msgSub);
+    };
+  }, [supabase]);
+
+  const navigation = [
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { 
+      name: "Products", 
+      href: "/admin/products", 
+      icon: Package,
+      children: [
+        { name: "All Products", href: "/admin/products" },
+        { name: "Add New", href: "/admin/products/add" },
+        { name: "Categories", href: "/admin/products/categories" },
+        { name: "Bundles", href: "/admin/products/bundles" },
+      ]
+    },
+    { 
+      name: "Orders", 
+      href: "/admin/orders", 
+      icon: ShoppingBag,
+      badge: counts.orders,
+      children: [
+        { name: "All Orders", href: "/admin/orders" },
+        { name: "Pending", href: "/admin/orders?status=pending" },
+        { name: "Processing", href: "/admin/orders?status=processing" },
+        { name: "Shipped", href: "/admin/orders?status=shipped" },
+        { name: "Delivered", href: "/admin/orders?status=delivered" },
+        { name: "Cancelled", href: "/admin/orders?status=cancelled" },
+      ]
+    },
+    { name: "Customers", href: "/admin/customers", icon: Users },
+    { name: "Messages", href: "/admin/messages", icon: MessageSquare, badge: counts.messages },
+    { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { name: "Content", href: "/admin/content", icon: PenTool },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
+  ];
 
   const toggleExpand = (name: string) => {
     setExpandedItems(prev => 
@@ -69,27 +105,27 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex">
+    <div className="min-h-screen bg-[#F8F9FA] flex font-sans">
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-border-light transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0",
           !isSidebarOpen && "-translate-x-full"
         )}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="p-6 border-b border-border-light">
+          <div className="p-6 border-b border-gray-100">
             <Link href="/admin" className="flex items-center gap-2">
-              <span className="text-2xl font-serif font-bold text-accent-forest tracking-tighter">ZAGULL</span>
-              <span className="text-[10px] font-bold bg-accent-forest text-white px-1.5 py-0.5 rounded uppercase">Admin</span>
+              <span className="text-2xl font-serif font-bold text-gray-900 tracking-tighter">ZAGULL</span>
+              <span className="text-[10px] font-bold bg-gray-900 text-white px-1.5 py-0.5 rounded uppercase">Admin</span>
             </Link>
           </div>
 
           {/* Navigation */}
           <nav className="flex-grow overflow-y-auto p-4 space-y-1 custom-scrollbar">
             {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/admin");
               const isExpanded = expandedItems.includes(item.name);
 
               return (
@@ -99,8 +135,8 @@ export default function AdminLayout({
                       <button
                         onClick={() => toggleExpand(item.name)}
                         className={cn(
-                          "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                          isActive ? "bg-accent-forest/5 text-accent-forest" : "text-text-secondary hover:bg-gray-50 hover:text-text-primary"
+                          "w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-all",
+                          isActive ? "bg-accent-forest/5 text-accent-forest" : "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
                         )}
                       >
                         <div className="flex items-center gap-3">
@@ -108,21 +144,21 @@ export default function AdminLayout({
                           {item.name}
                         </div>
                         <div className="flex items-center gap-2">
-                          {item.badge && (
-                            <span className="bg-red-500 text-white text-[10px] px-1.5 rounded-full">{item.badge}</span>
+                          {item.badge > 0 && (
+                            <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">{item.badge}</span>
                           )}
                           <ChevronDown className={cn("w-3 h-3 transition-transform", isExpanded && "rotate-180")} />
                         </div>
                       </button>
                       {isExpanded && (
-                        <div className="ml-7 space-y-1 border-l border-border-light/50">
+                        <div className="ml-7 mt-1.5 space-y-1 border-l border-gray-100 pl-4">
                           {item.children.map((child) => (
                             <Link
                               key={child.name}
                               href={child.href}
                               className={cn(
-                                "block px-4 py-1.5 text-xs transition-colors",
-                                pathname === child.href ? "text-accent-forest font-bold" : "text-text-secondary hover:text-text-primary"
+                                "block py-1.5 text-xs font-semibold transition-colors",
+                                pathname === child.href ? "text-accent-forest" : "text-gray-400 hover:text-gray-900"
                               )}
                             >
                               {child.name}
@@ -135,17 +171,17 @@ export default function AdminLayout({
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                        pathname === item.href ? "bg-accent-forest text-white" : "text-text-secondary hover:bg-gray-50 hover:text-text-primary"
+                        "flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-all",
+                        pathname === item.href ? "bg-accent-forest text-white shadow-lg shadow-accent-forest/10" : "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
                       )}
                     >
                       <div className="flex items-center gap-3">
                         <item.icon className="w-4 h-4" />
                         {item.name}
                       </div>
-                      {item.badge && (
+                      {item.badge > 0 && (
                         <span className={cn(
-                          "text-[10px] px-1.5 rounded-full",
+                          "text-[10px] px-2 py-0.5 rounded-full font-bold",
                           pathname === item.href ? "bg-white text-accent-forest" : "bg-red-500 text-white"
                         )}>{item.badge}</span>
                       )}
@@ -157,18 +193,11 @@ export default function AdminLayout({
           </nav>
 
           {/* Footer Sidebar */}
-          <div className="p-4 border-t border-border-light space-y-1">
-            <Link href="/admin/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-gray-50 hover:text-text-primary">
-              <User className="w-4 h-4" />
-              My Account
+          <div className="p-4 border-t border-border-light bg-gray-50/50">
+            <Link href="/admin/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-gray-400 hover:bg-white hover:text-gray-900 hover:shadow-sm transition-all">
+              <Settings className="w-4 h-4" />
+              Settings
             </Link>
-            <button 
-              onClick={() => alert("Logging out of ZAGULL Admin... Redirecting to login.")}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
           </div>
         </div>
       </aside>
@@ -176,44 +205,28 @@ export default function AdminLayout({
       {/* Main Content */}
       <div className="flex-grow flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-border-light px-8 flex items-center justify-between sticky top-0 z-40">
-          <div className="flex items-center gap-4 flex-grow max-w-xl">
+        <header className="h-20 bg-white border-b border-border-light px-8 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md bg-white/80">
+          <div className="flex items-center gap-6 flex-grow max-w-2xl">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-2 hover:bg-gray-50 rounded-lg"
+              className="lg:hidden p-2.5 hover:bg-gray-50 rounded-xl transition-all"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 text-gray-400" />
             </button>
-            <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
-              <input 
-                type="text" 
-                placeholder="Search anything... (⌘K)" 
-                className="w-full bg-gray-50 border-none rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-accent-forest/20 outline-none"
-              />
+            <div className="flex-grow">
+              <CommandPalette />
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 hover:bg-gray-50 rounded-lg">
-              <Bell className="w-5 h-5 text-text-secondary" />
-              <span className="absolute top-1 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="h-8 w-px bg-border-light mx-2" />
-            <div className="flex items-center gap-3">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-text-primary leading-none">Admin Zain</p>
-                <p className="text-[10px] text-text-secondary mt-1">Super Admin</p>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-accent-forest text-white flex items-center justify-center font-bold text-sm">
-                AZ
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <NotificationBell />
+            <div className="h-8 w-px bg-gray-100 mx-4" />
+            <AdminUserMenu initialName="Admin Zain" initialEmail="admin@zagull.pk" />
           </div>
         </header>
 
         {/* Content Area */}
-        <main className="p-8">
+        <main className="p-8 animate-in fade-in duration-700">
           {children}
         </main>
       </div>

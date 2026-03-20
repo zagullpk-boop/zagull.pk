@@ -8,15 +8,28 @@ export function Newsletter() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
     setIsLoading(true);
-    // Simulate API call — replace with real service when ready
-    setTimeout(() => {
+    
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Newsletter error:", err);
+    } finally {
       setIsLoading(false);
-      setSubmitted(true);
-    }, 700);
+    }
   };
 
   return (
