@@ -15,7 +15,8 @@ import {
   PackageCheck,
   MoreHorizontal,
   ArrowUpRight,
-  AlertCircle
+  AlertCircle,
+  DollarSign
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -28,7 +29,10 @@ const timeline = [
   { status: "Delivered", date: "Pending", icon: PackageCheck, color: "text-gray-300", done: false },
 ];
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
+import { use } from "react";
+
+export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [status, setStatus] = useState("Pending");
 
   return (
@@ -41,7 +45,7 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-serif text-text-primary">Order #ZAG-{params.id}</h1>
+              <h1 className="text-2xl font-serif text-text-primary">Order #ZAG-{id}</h1>
               <span className="px-3 py-1 bg-red-50 text-red-700 text-[10px] font-bold uppercase tracking-widest rounded-full border border-red-100">
                 {status}
               </span>

@@ -12,7 +12,9 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export default function ShopPage() {
+import { Suspense } from "react";
+
+function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "All";
   const initialSearch = searchParams.get("q") || "";
@@ -282,5 +284,17 @@ export default function ShopPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background-primary">
+        <Loader2 className="w-10 h-10 animate-spin text-accent-forest" />
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }
