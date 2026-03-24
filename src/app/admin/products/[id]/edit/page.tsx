@@ -4,14 +4,11 @@ import { updateProduct } from "@/lib/admin/product-actions";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 
-import { requireAdminAuth } from "@/lib/admin/auth-actions";
-
 export default async function EditProductPage({ 
   params,
 }: { 
   params: Promise<{ id: string }>;
 }) {
-  await requireAdminAuth();
   const { id } = await params;
   
   const { data: product } = await supabase

@@ -3,10 +3,9 @@ import { supabase } from "@/lib/supabase";
 import { ShoppingBag, Search, Filter, Download, Calendar, ArrowRight } from "lucide-react";
 import { OrderTable } from "@/components/admin/OrderTable";
 
-import { requireAdminAuth } from "@/lib/admin/auth-actions";
+export const dynamic = 'force-dynamic';
 
 export default async function AdminOrdersPage() {
-  await requireAdminAuth();
   const { data: orders, error } = await supabase
     .from("orders")
     .select(`

@@ -4,10 +4,9 @@ import { Plus, Search, Filter, Download } from "lucide-react";
 import Link from "next/link";
 import { ProductTable } from "@/components/admin/ProductTable";
 
-import { requireAdminAuth } from "@/lib/admin/auth-actions";
+export const dynamic = 'force-dynamic';
 
 export default async function AdminProductsPage() {
-  await requireAdminAuth();
   const { data: products, error } = await supabase
     .from("products")
     .select("*")
