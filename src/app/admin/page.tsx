@@ -289,7 +289,7 @@ export default function AdminDashboard() {
                 { label: 'Bulk Edit', icon: Package, color: 'bg-blue-50 text-blue-600' },
                 { label: 'Discount', icon: DollarSign, color: 'bg-emerald-50 text-emerald-600' },
                 { label: 'Subscribers', icon: Users, color: 'bg-purple-50 text-purple-600' },
-                { label: 'Report', icon: BarChart3, color: 'bg-amber-50 text-amber-600' },
+                { label: 'Report', icon: BarChartIcon, color: 'bg-amber-50 text-amber-600' },
               ].map((item, i) => (
                 <button key={i} className="flex flex-col items-center justify-center p-4 rounded-3xl hover:bg-gray-50 transition-all group border border-gray-50">
                   <div className={cn("p-3 rounded-2xl mb-3 group-hover:scale-110 transition-transform", item.color)}>
@@ -377,4 +377,4 @@ export default function AdminDashboard() {
 }
 
 // Dummy components because I don't know if they exist yet in user's UI kit
-import { BarChart3 } from "lucide-react";
+import { BarChart as BarChartIcon } from "lucide-react";

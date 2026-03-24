@@ -4,12 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import { 
   Instagram, 
-  MessageCircle as WhatsApp, 
-  Music as TikTok, 
   Mail, 
   Phone, 
   MapPin 
 } from "lucide-react";
+import { TikTokIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
 import { 
   ZAGULL_PHONE, 
   ZAGULL_WHATSAPP, 
@@ -42,10 +41,10 @@ export function Footer() {
               <Instagram className="w-5 h-5" />
             </Link>
             <Link href={ZAGULL_WHATSAPP} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all" aria-label="WhatsApp">
-              <WhatsApp className="w-5 h-5" />
+              <WhatsAppIcon size={20} />
             </Link>
             <Link href={ZAGULL_TIKTOK} target="_blank" className="w-10 h-10 rounded-full border border-border-light flex items-center justify-center text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest transition-all" aria-label="TikTok">
-              <TikTok className="w-5 h-5" />
+              <TikTokIcon size={20} />
             </Link>
           </div>
         </div>

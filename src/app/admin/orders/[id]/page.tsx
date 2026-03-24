@@ -29,10 +29,11 @@ const timeline = [
   { status: "Delivered", date: "Pending", icon: PackageCheck, color: "text-gray-300", done: false },
 ];
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 
-export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function OrderDetailPage() {
+  const params = useParams();
+  const id = typeof params.id === "string" ? params.id : "";
   const [status, setStatus] = useState("Pending");
 
   return (

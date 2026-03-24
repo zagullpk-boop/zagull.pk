@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { WhatsAppIcon } from "@/components/ui/SocialIcons";
 import { ZAGULL_WHATSAPP } from "@/lib/constants";
 
 interface WhatsAppButtonProps {
@@ -37,7 +37,7 @@ export function WhatsAppButton({ className }: WhatsAppButtonProps) {
       )}
     >
       <div className="relative">
-        <MessageCircle className="w-6 h-6 fill-current" />
+        <WhatsAppIcon size={24} className="fill-current" />
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#25D366] animate-pulse" />
       </div>
       <div className="flex flex-col items-start leading-none">
