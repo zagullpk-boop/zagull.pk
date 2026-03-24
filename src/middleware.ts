@@ -56,8 +56,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/admin',
-    '/admin/:path*',
+    '/admin((?!login).*)', // Matches /admin and all sub-routes EXCEPT /admin/login
     '/api/admin/:path*'
   ],
 }
