@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import ShopPage from "./ShopPage";
 
 export const metadata: Metadata = {
-  title: "Shop All Collections",
-  description: "Browse ZAGULL's nature-inspired artificial jewellery, clothing, and gift baskets. Shop our latest pendants, rings, and more with nationwide COD.",
+  title: "Shop ZAGULL | Nature-Inspired Jewellery & Clothing",
+  description: "Browse ZAGULL's curated collection of artificial jewellery, girls' clothing, and customized gift baskets. Premium quality from Faisalabad with nationwide COD.",
 };
 
 export default function Shop() {

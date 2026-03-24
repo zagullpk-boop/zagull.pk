@@ -1,86 +1,69 @@
-"use client";
-
-import { Star, Quote } from "lucide-react";
-import Image from "next/image";
+import React from "react";
+import { Star } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Sarah Ahmed",
-    location: "Lahore",
-    content: "The jewellery from ZAGULL is simply breathtaking. The attention to detail in the pendants I ordered for my sister's wedding was incredible. Truly premium quality!",
-    rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    quote: "Absolutely loved the earrings! The packaging was so beautiful, felt like a gift even to myself.",
+    name: "Ayesha R.",
+    city: "Lahore",
+    stars: 5,
   },
   {
-    name: "Zainab Malik",
-    location: "Islamabad",
-    content: "I've never seen such beautiful gift baskets in Pakistan. The presentation was so elegant, and the mix of items felt really thoughtful. It was the perfect birthday surprise.",
-    rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Zainab",
+    quote: "The gift basket was perfect for Eid. Everyone asked where I got it from. Will definitely order again!",
+    name: "Sana M.",
+    city: "Karachi",
+    stars: 5,
   },
   {
-    name: "Ayesha Khan",
-    location: "Karachi",
-    content: "The clothing line is so graceful. The fabric is premium and the designs are contemporary yet modest. ZAGULL has become my go-to for special occasions.",
-    rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ayesha",
+    quote: "Great quality for the price. Delivery was faster than expected. The jewellery looks so premium!",
+    name: "Hina K.",
+    city: "Islamabad",
+    stars: 5,
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="py-24 px-6 md:px-12 bg-white relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-accent-forest/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-forest/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-sm tracking-[0.2em] text-accent-forest font-medium uppercase">
-            Customer Stories
+    <section className="py-24 px-6 md:px-12 bg-[#fdf6f0]/50 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-4xl md:text-5xl font-serif text-[#2d1b10]">
+            What Our Customers Say
           </h2>
-          <h3 className="text-4xl md:text-5xl font-serif text-text-primary">
-            Trusted by Women Across Pakistan
-          </h3>
-          <p className="text-text-secondary">
-            Hear from our community about their experience with ZAGULL's nature-inspired collections.
+          <p className="text-[#8b6e5a] tracking-widest uppercase text-[10px] font-bold">
+            Loved by women across Pakistan
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 snap-x snap-mandatory overflow-x-auto pb-8 -mb-8 no-scrollbar">
+          {testimonials.map((t, i) => (
             <div 
-              key={index}
-              className="bg-background-primary p-8 md:p-12 rounded-3xl border border-border-light hover:border-accent-forest/30 transition-all duration-500 hover:shadow-xl group"
+              key={i} 
+              className="snap-center min-w-[300px] bg-white p-10 rounded-[2.5rem] border border-[#c9956c]/10 shadow-xl shadow-[#c9956c]/5 relative group hover:-translate-y-2 transition-all duration-500"
             >
-              <div className="flex gap-1 mb-6">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-accent-forest text-accent-forest" />
-                ))}
-              </div>
-              
-              <div className="relative mb-8">
-                <Quote className="absolute -top-4 -left-4 w-12 h-12 text-accent-forest/10" />
-                <p className="text-text-primary font-sans leading-relaxed relative z-10 italic">
-                  "{testimonial.content}"
-                </p>
+              <div className="absolute top-8 left-8 text-[#c9956c]/10">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
               </div>
 
-              <div className="flex items-center gap-4 pt-6 border-t border-border-light">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white border border-border-light group-hover:border-accent-forest/50 transition-colors">
-                  <Image 
-                    src={testimonial.avatar} 
-                    alt={testimonial.name} 
-                    fill 
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-primary">{testimonial.name}</h4>
-                  <p className="text-xs text-text-secondary font-medium tracking-wider uppercase">
-                    {testimonial.location}
-                  </p>
-                </div>
+              <div className="flex gap-1 mb-6 relative">
+                {Array.from({ length: t.stars }).map((_, j) => (
+                  <Star key={j} className="w-4 h-4 fill-[#c9956c] text-[#c9956c]" />
+                ))}
+              </div>
+
+              <p className="text-[#2d1b10] font-serif text-lg leading-relaxed mb-8 relative">
+                &quot;{t.quote}&quot;
+              </p>
+
+              <div className="space-y-1 pt-4 border-t border-[#fdf6f0] relative">
+                <p className="font-bold text-sm tracking-widest uppercase text-[#2d1b10]">
+                  {t.name}
+                </p>
+                <p className="text-[10px] text-[#8b6e5a] uppercase font-medium tracking-widest">
+                  {t.city}
+                </p>
               </div>
             </div>
           ))}

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+Allow: /
+Sitemap: https://zagull-pk.vercel.app/sitemap.xml

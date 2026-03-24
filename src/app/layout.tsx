@@ -18,22 +18,30 @@ export const metadata: Metadata = {
     default: 'ZAGULL | Elegant Jewellery & Fashion',
     template: '%s | ZAGULL',
   },
-  description: 'Discover nature-inspired artificial jewellery and contemporary clothing crafted in Faisalabad, Pakistan. Shop pendants, rings, bracelets and more.',
-  keywords: ['artificial jewellery Pakistan', 'fashion Faisalabad', 'jewellery online Pakistan', 'girls clothing Pakistan', 'zagull'],
-  authors: [{ name: 'ZAGULL Team' }],
-  creator: 'ZAGULL',
-  publisher: 'ZAGULL',
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_PK',
-    url: 'https://zagull.vercel.app',
-    siteName: 'ZAGULL',
-    title: 'ZAGULL | Elegant Jewellery & Fashion',
-    description: 'Nature-inspired artificial jewellery and contemporary clothing from Faisalabad, Pakistan.',
+    description: 'Discover nature-inspired artificial jewellery and contemporary clothing crafted in Faisalabad, Pakistan. Shop pendants, rings, gift baskets and more with nationwide COD.',
+    keywords: ['artificial jewellery Pakistan', 'jewellery Faisalabad', 'girl clothing Pakistan', 'customized gift baskets Pakistan', 'zagull pk'],
+    authors: [{ name: 'ZAGULL Team' }],
+    creator: 'ZAGULL',
+    publisher: 'ZAGULL',
+    metadataBase: new URL('https://zagull-pk.vercel.app'),
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: 'en_PK',
+      url: 'https://zagull-pk.vercel.app',
+      siteName: 'ZAGULL',
+      title: 'ZAGULL | Boutique Fashion & Jewellery from Faisalabad',
+      description: 'Nature-inspired artificial jewellery and contemporary clothing from Faisalabad, Pakistan.',
     images: [{
       url: '/images/og-image.jpg',
       width: 1200,
@@ -47,10 +55,14 @@ export const metadata: Metadata = {
     description: 'Nature-inspired artificial jewellery and contemporary clothing from Faisalabad, Pakistan.',
     images: ['/images/og-image.jpg'],
   },
-  verification: {
-    google: 'your-google-verification-code', // Placeholder for user to fill
-  },
-};
+    verification: {
+      google: 'your-google-verification-code', // Placeholder
+    },
+    icons: {
+      icon: '/favicon.png',
+      apple: '/favicon.png',
+    },
+  };
 
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";

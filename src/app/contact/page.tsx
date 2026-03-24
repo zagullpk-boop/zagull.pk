@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import ContactPage from "./ContactPage";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with the ZAGULL team for order inquiries, collaborations, or general questions. We're based in Faisalabad and always happy to help.",
+  title: "Contact ZAGULL | 24/7 WhatsApp Support",
+  description: "Questions about your order or our collections? Message the ZAGULL team on WhatsApp or use our contact form. We're here to help you 24/7.",
 };
 
 export default function Contact() {

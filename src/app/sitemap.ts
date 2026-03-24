@@ -1,50 +1,41 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+import { supabase } from '@/lib/supabase';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://zagull.vercel.app'
-  
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/shop`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/faqs`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.3,
-    },
-    {
-       url: `${baseUrl}/privacy-policy`,
-       lastModified: new Date(),
-       changeFrequency: 'yearly',
-       priority: 0.1,
-    },
-    {
-       url: `${baseUrl}/terms`,
-       lastModified: new Date(),
-       changeFrequency: 'yearly',
-       priority: 0.1,
-    }
-  ]
+const DOMAIN = 'https://zagull-pk.vercel.app';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Static routes
+  const staticRoutes = [
+    '',
+    '/shop',
+    '/about',
+    '/contact',
+    '/faqs',
+    '/shipping',
+    '/order-tracking',
+  ].map((route) => ({
+    url: `${DOMAIN}${route}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: route === '' ? 1.0 : 0.8,
+  }));
+
+  // Dynamic products
+  try {
+    const { data: products } = await supabase
+      .from('products')
+      .select('id, updated_at');
+    
+    const productRoutes = (products || []).map((product) => ({
+      url: `${DOMAIN}/products/${product.id}`,
+      lastModified: new Date(product.updated_at || new Date()),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    }));
+
+    return [...staticRoutes, ...productRoutes];
+  } catch (error) {
+    console.error('Sitemap generation error:', error);
+    return staticRoutes;
+  }
 }
