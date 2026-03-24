@@ -1,24 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
-const secretKey = "zagull-admin-secret-key-12345"
+const secretKey = process.env.JWT_SECRET || "zagull-admin-fallback-secret-2026"
 const key = new TextEncoder().encode(secretKey)
 
 async function decrypt(input: string): Promise<any> {
+  if (!input) return null
   try {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ["HS256"],
     })
     return payload
   } catch (error) {
+    console.error("JWT Decrypt Error:", error.message)
     return null
   }
 }
 
 export async function middleware(req: NextRequest) {
-  const isAdminRoute = req.nextUrl.pathname.startsWith('/admin')
-  const isLoginPage = req.nextUrl.pathname === '/admin/login'
-  const isApiAdminRoute = req.nextUrl.pathname.startsWith('/api/admin')
+  const { pathname } = req.nextUrl
+  const isAdminRoute = pathname.startsWith('/admin')
+  const isLoginPage = pathname === '/admin/login'
+  const isApiAdminRoute = pathname.startsWith('/api/admin')
 
   // Skip middleware for non-admin routes
   if (!isAdminRoute && !isApiAdminRoute) {
@@ -30,6 +33,7 @@ export async function middleware(req: NextRequest) {
 
   // 1. Not logged in + trying to access admin (except login page) → redirect to login
   if (isAdminRoute && !isLoginPage && !payload) {
+    console.log("Blocking unauthorized access to:", pathname)
     const loginUrl = new URL('/admin/login', req.url)
     return NextResponse.redirect(loginUrl)
   }
@@ -51,5 +55,9 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: [
+    '/admin',
+    '/admin/:path*',
+    '/api/admin/:path*'
+  ],
 }
