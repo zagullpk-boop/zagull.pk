@@ -77,9 +77,9 @@ export function ProductCard({
       <button 
         onClick={handleWishlistToggle}
         className={cn(
-          "absolute top-4 right-4 z-10 w-10 h-10 rounded-full backdrop-blur-sm border border-border-light flex items-center justify-center transition-all opacity-0 group-hover:opacity-100",
+          "absolute top-4 right-4 z-10 w-10 h-10 rounded-full backdrop-blur-sm border border-border-light flex items-center justify-center transition-all",
           isWishlisted 
-            ? "bg-red-500 text-white border-red-500 opacity-100" 
+            ? "bg-red-500 text-white border-red-500" 
             : "bg-white/80 text-text-primary hover:bg-accent-forest hover:text-white hover:border-accent-forest"
         )}
       >
@@ -87,47 +87,26 @@ export function ProductCard({
       </button>
 
       {/* Product Image */}
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden bg-background-primary">
         <Image
           src={image}
           alt={name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
         />
-        {/* Quick Add Overlay */}
-        {!isOutOfStock && (
-          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
-            <Button 
-              onClick={handleQuickAdd}
-              className={cn(
-                "w-full backdrop-blur-md border-none shadow-lg transition-all",
-                isAdded ? "bg-green-600 text-white" : "bg-white/90 text-text-primary hover:bg-accent-forest hover:text-white"
-              )}
-            >
-              {isAdded ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Added!
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  Quick Add
-                </>
-              )}
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Product Info */}
-      <div className="p-6 space-y-2">
-        <span className="text-[10px] text-accent-forest font-semibold uppercase tracking-widest leading-none">
-          {category}
-        </span>
-        <h4 className="text-lg font-serif text-text-primary truncate">
-          {name}
-        </h4>
+      <div className="p-6 space-y-4">
+        <div className="space-y-1">
+          <span className="text-[10px] text-accent-forest font-semibold uppercase tracking-widest leading-none">
+            {category}
+          </span>
+          <h4 className="text-lg font-serif text-text-primary truncate">
+            {name}
+          </h4>
+        </div>
+
         <div className="flex items-center justify-between">
           <span className="text-base font-medium text-text-primary">
             Rs. {price.toLocaleString()}
@@ -137,6 +116,30 @@ export function ProductCard({
             <span className="text-xs text-text-secondary font-medium">4.8</span>
           </div>
         </div>
+
+        {!isOutOfStock && (
+          <Button 
+            onClick={handleQuickAdd}
+            className={cn(
+              "w-full h-11 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300",
+              isAdded 
+                ? "bg-green-600 text-white" 
+                : "bg-accent-forest text-white hover:bg-black shadow-md hover:shadow-lg"
+            )}
+          >
+            {isAdded ? (
+              <>
+                <Check className="w-4 h-4 mr-2" />
+                Added!
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-4 h-4 mr-2" />
+                Add to Cart
+              </>
+            )}
+          </Button>
+        )}
       </div>
     </div>
   );

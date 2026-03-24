@@ -8,14 +8,18 @@ const categories = [
     description: "Elegant pendants, rings, and more.",
     image: "/images/jewellery_cat.png",
     href: "/shop?category=Jewellery",
-    size: "large",
   },
   {
     title: "Clothing",
     description: "Contemporary fashion for daily grace.",
     image: "/images/clothing_cat.png",
     href: "/shop?category=Clothing",
-    size: "large",
+  },
+  {
+    title: "Gift Baskets",
+    description: "Thoughtfully curated hampers for every occasion.",
+    image: "/images/gift_baskets_cat.png",
+    href: "/shop?category=Gift+Baskets",
   },
 ];
 
@@ -41,7 +45,7 @@ export function FeaturedCategories() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {categories.map((category) => (
             <Link 
               key={category.title}
@@ -61,10 +65,10 @@ export function FeaturedCategories() {
 
               {/* Content */}
               <div className="relative z-10 space-y-3">
-                <h4 className="text-3xl md:text-4xl font-serif text-white">
+                <h4 className="text-3xl font-serif text-white">
                   {category.title}
                 </h4>
-                <p className="text-white/80 font-sans max-w-xs transition-opacity duration-300">
+                <p className="text-white/80 font-sans text-sm max-w-xs transition-opacity duration-300">
                   {category.description}
                 </p>
                 <div className="pt-4 overflow-hidden">

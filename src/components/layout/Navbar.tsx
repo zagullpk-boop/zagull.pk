@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Search, User, Heart, ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
+import { Search, User, Heart, ShoppingBag, Menu, X, ChevronDown, Facebook, Instagram, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 
@@ -183,6 +183,17 @@ export function Navbar() {
                 )}
               </div>
             ))}
+            <div className="pt-8 border-t border-border-light flex items-center justify-center space-x-10">
+              <Link href="https://facebook.com/zagull.pk" target="_blank" className="text-text-secondary hover:text-accent-forest transition-colors">
+                <Facebook className="w-6 h-6" />
+              </Link>
+              <Link href="https://instagram.com/zagull.pk" target="_blank" className="text-text-secondary hover:text-accent-forest transition-colors">
+                <Instagram className="w-6 h-6" />
+              </Link>
+              <Link href="https://wa.me/923329024005" target="_blank" className="text-text-secondary hover:text-accent-forest transition-colors">
+                <MessageCircle className="w-6 h-6" />
+              </Link>
+            </div>
           </div>
         </div>
       )}

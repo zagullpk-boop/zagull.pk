@@ -4,6 +4,8 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { FeaturedCategories } from "@/components/sections/FeaturedCategories";
 import { NewArrivals } from "@/components/sections/NewArrivals";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { InstagramFeed } from "@/components/sections/InstagramFeed";
 import { Newsletter } from "@/components/sections/Newsletter";
 
 export default function Home() {
@@ -15,6 +17,8 @@ export default function Home() {
         <TrustBar />
         <FeaturedCategories />
         <NewArrivals />
+        <Testimonials />
+        <InstagramFeed />
         <Newsletter />
       </main>
       <Footer />

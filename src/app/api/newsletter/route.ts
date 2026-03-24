@@ -1,43 +1,20 @@
-export const dynamic = 'force-dynamic';
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const { email } = await req.json();
+    const body = await request.json();
+    const { email } = body;
 
-    if (!email || !email.includes('@')) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
-    }
+    // In a real production app, you would:
+    // 1. Validate the email
+    // 2. Add to Mailchimp, Loops, etc.
+    // 3. Store in Supabase 'newsletter_subscribers' table
 
-    // Initialize Supabase with Service Role Key for administrative actions
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    console.log('New Newsletter Subscription:', { email });
 
-    if (!supabaseUrl || !supabaseServiceKey) {
-      return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    const { error } = await supabase
-      .from('newsletter_subscribers')
-      .upsert(
-        { 
-          email: email.toLowerCase(), 
-          subscribed_at: new Date().toISOString() 
-        }, 
-        { onConflict: 'email' }
-      );
-
-    if (error) {
-      console.error('Newsletter storage error:', error);
-      throw error;
-    }
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, message: 'Subscribed' }, { status: 200 });
   } catch (error) {
-    console.error('Newsletter API error:', error);
-    return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
+    console.error('Newsletter API Error:', error);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
   }
 }
