@@ -4,7 +4,10 @@ import { Plus, Search, Filter, Download } from "lucide-react";
 import Link from "next/link";
 import { ProductTable } from "@/components/admin/ProductTable";
 
-export default async function ProductsPage() {
+import { requireAdminAuth } from "@/lib/admin/auth-actions";
+
+export default async function AdminProductsPage() {
+  await requireAdminAuth();
   const { data: products, error } = await supabase
     .from("products")
     .select("*")

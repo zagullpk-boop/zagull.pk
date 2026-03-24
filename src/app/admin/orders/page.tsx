@@ -3,7 +3,10 @@ import { supabase } from "@/lib/supabase";
 import { ShoppingBag, Search, Filter, Download, Calendar, ArrowRight } from "lucide-react";
 import { OrderTable } from "@/components/admin/OrderTable";
 
-export default async function OrdersPage() {
+import { requireAdminAuth } from "@/lib/admin/auth-actions";
+
+export default async function AdminOrdersPage() {
+  await requireAdminAuth();
   const { data: orders, error } = await supabase
     .from("orders")
     .select(`

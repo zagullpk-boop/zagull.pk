@@ -3,6 +3,8 @@
 import { cookies } from "next/headers";
 import { encrypt, decrypt } from "../auth";
 
+import { redirect } from "next/navigation";
+
 export async function login(adminId: string, username: string) {
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const session = await encrypt({ adminId, username, expires });
@@ -18,4 +20,12 @@ export async function getSession() {
   const session = (await cookies()).get("admin_session")?.value;
   if (!session) return null;
   return await decrypt(session);
+}
+
+export async function requireAdminAuth() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+  return session;
 }

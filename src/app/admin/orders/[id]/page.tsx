@@ -31,9 +31,11 @@ const timeline = [
 
 import { useParams } from "next/navigation";
 
-export default function OrderDetailPage() {
-  const params = useParams();
-  const id = typeof params.id === "string" ? params.id : "";
+import { requireAdminAuth } from "@/lib/admin/auth-actions";
+
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireAdminAuth();
+  const { id } = await params;
   const [status, setStatus] = useState("Pending");
 
   return (

@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const secretKey = "zagull-admin-secret-key-12345"; // In production, use process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET || "zagull-admin-fallback-secret-2026";
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {

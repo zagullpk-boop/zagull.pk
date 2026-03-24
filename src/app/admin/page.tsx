@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { createBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { getDashboardStats, getRevenueData } from "@/lib/admin/stats";
+import { requireAdminAuth } from "@/lib/admin/auth-actions";
 import { 
   AreaChart, 
   Area, 
