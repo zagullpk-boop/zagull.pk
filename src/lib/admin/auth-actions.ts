@@ -1,31 +1,30 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { encrypt, decrypt } from "../auth";
-
 import { redirect } from "next/navigation";
 
-export async function login(adminId: string, username: string) {
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  const session = await encrypt({ adminId, username, expires });
+export async function requireAdminAuth() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("zagull_admin_token")?.value;
+  const secretToken = process.env.ADMIN_SECRET_TOKEN;
 
-  (await cookies()).set("admin_session", session, { expires, httpOnly: true, secure: true });
+  if (!token || !secretToken || token !== secretToken) {
+    redirect("/admin/login");
+  }
+
+  return { authenticated: true };
 }
 
 export async function logout() {
-  (await cookies()).set("admin_session", "", { expires: new Date(0) });
+  const cookieStore = await cookies();
+  cookieStore.set("zagull_admin_token", "", { expires: new Date(0), path: "/" });
 }
 
 export async function getSession() {
-  const session = (await cookies()).get("admin_session")?.value;
-  if (!session) return null;
-  return await decrypt(session);
-}
+  const cookieStore = await cookies();
+  const token = cookieStore.get("zagull_admin_token")?.value;
+  const secretToken = process.env.ADMIN_SECRET_TOKEN;
 
-export async function requireAdminAuth() {
-  const session = await getSession();
-  if (!session) {
-    redirect("/admin/login");
-  }
-  return session;
+  if (!token || !secretToken || token !== secretToken) return null;
+  return { authenticated: true };
 }
