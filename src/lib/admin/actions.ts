@@ -13,32 +13,39 @@ export async function authenticate(prevState: any, formData: FormData) {
     return "Please enter both username and password.";
   }
 
-  try {
-    // 1. Fetch admin from database
-    const { data: admin, error } = await supabase
-      .from("admins")
-      .select("*")
-      .eq("username", username)
-      .single();
+  // --- Hardcoded fallback credentials ---
+  // These are the master credentials. Login will always work with these.
+  const ADMIN_USERNAME = "zagull.pk@gmail.com";
+  const ADMIN_PASSWORD = "10101213";
 
-    if (error || !admin) {
-      return "Invalid username or password.";
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    // Create a session with a hardcoded admin ID
+    await login("admin-master-id", ADMIN_USERNAME);
+    // Seed the DB in the background so future DB lookups work too
+    setupInitialAdmin().catch(() => {});
+  } else {
+    // Try database lookup for any other admin accounts
+    try {
+      const { data: admin, error } = await supabase
+        .from("admins")
+        .select("*")
+        .eq("username", username)
+        .single();
+
+      if (error || !admin) {
+        return "Invalid username or password.";
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(password, admin.password_hash);
+      if (!isPasswordCorrect) {
+        return "Invalid username or password.";
+      }
+
+      await login(admin.id, admin.username);
+    } catch (err) {
+      console.error("Auth error:", err);
+      return "An error occurred during authentication.";
     }
-
-    // 2. Verify password
-    const isPasswordCorrect = await bcrypt.compare(password, admin.password_hash);
-    if (!isPasswordCorrect) {
-      return "Invalid username or password.";
-    }
-
-    // 3. Create session
-    await login(admin.id, admin.username);
-    
-    // 4. Redirect to dashboard
-    // Note: redirect() throws an error, so it must be outside the try/catch or handled.
-  } catch (err) {
-    console.error("Auth error:", err);
-    return "An error occurred during authentication.";
   }
 
   redirect("/admin/dashboard");
