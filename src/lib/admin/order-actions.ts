@@ -16,7 +16,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
     if (error) throw error;
 
     revalidatePath("/admin/orders");
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin");
     return { success: true };
   } catch (error: any) {
     console.error("Update order status error:", error);

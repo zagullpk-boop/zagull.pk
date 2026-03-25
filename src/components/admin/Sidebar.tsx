@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { LogoutButton } from "./LogoutButton";
 
 const navigation = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
 ];
@@ -23,7 +23,7 @@ export function Sidebar({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-col h-full bg-white border-r border-border-light", className)}>
       <div className="p-8 pb-4">
-        <Link href="/admin/dashboard" className="group">
+        <Link href="/admin" className="group">
           <span className="text-2xl font-serif tracking-tight text-text-primary group-hover:text-accent-forest transition-colors">
             ZAGULL
           </span>
